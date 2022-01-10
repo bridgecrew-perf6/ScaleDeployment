@@ -55,12 +55,14 @@ func main() {
 		panic(err.Error())
 	}
 
+	// Listing all the deployments with the label
+
 	deployments, err := clientset.AppsV1().Deployments("").List(context.Background(), metaV1.ListOptions{LabelSelector: *label})
 	if err != nil {
 		panic(err.Error())
 	}
 
-	// For each Deployment (k8s.io/api/apps/v1)
+	// For each Deployment in the Deployments listed above (k8s.io/api/apps/v1)
 	for i, deployment := range deployments.Items {
 		fmt.Printf("Deployment %d: %s is scaled to %d replicas\n", i+1, deployment.ObjectMeta.Name, *replicas)
 		err = ScaleDeploymentReplicas(clientset, *namespace, deployment.ObjectMeta.Name, *replicas)
